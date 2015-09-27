@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                                         GameActivity.class
                                 );
 
-                                i.putExtra("diff", which);
+                                i.putExtra(GameActivity.EXTRA_DIFFICULTY, which);
                                 i.putExtra("name", "Promlert");
                                 i.putExtra("age", 40);
 

@@ -9,25 +9,19 @@ import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity {
 
+    public static final String EXTRA_DIFFICULTY = "diff";
+
+    private int difficulty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         Intent i = getIntent();
-        int difficulty = i.getIntExtra("diff", 0);
-        String name = i.getStringExtra("name");
-        int age = i.getIntExtra("age", 0);
+        difficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
 
-        String msg = String.format(
-                "Difficulty: %d \n Name: %s \n Age: %d",
-                difficulty,
-                name,
-                age
-        );
 
-        TextView tv = (TextView) findViewById(R.id.text);
-        tv.setText(msg);
     }
 
     @Override

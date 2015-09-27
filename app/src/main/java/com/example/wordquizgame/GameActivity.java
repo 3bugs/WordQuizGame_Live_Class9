@@ -3,23 +3,13 @@ package com.example.wordquizgame;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -167,9 +157,37 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void prepareChoiceWords() {
+        mChoiceWordList.clear();
 
+        while (mChoiceWordList.size() < mNumChoices) {
+            int randomIndex = mRandom.nextInt(mFileNameList.size());
+            String randomWord = getWord(mFileNameList.get(randomIndex));
+
+            if (mChoiceWordList.contains(randomWord) == false &&
+                    randomWord.equals(getWord(mAnswerFileName)) == false ) {
+                mChoiceWordList.add(randomWord);
+            }
+        }
+
+        int randomIndex = mRandom.nextInt(mNumChoices);
+        mChoiceWordList.set(randomIndex, getWord(mAnswerFileName));
+
+        // log คำศัพท์ที่เป็น choice
+        Log.i(TAG, "*******************************");
+        Log.i(TAG, "คำศัพท์ตัวเลือกที่สุ่มได้");
+        for (String w : mChoiceWordList) {
+            Log.i(TAG, w);
+        }
+        Log.i(TAG, "*******************************");
     }
 
+    private String getWord(String fileName) {
+        String word = fileName.substring(
+                fileName.indexOf('-') + 1
+        );
+
+        return word;
+    }
 
 
 /*

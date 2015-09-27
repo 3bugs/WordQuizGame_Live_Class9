@@ -1,6 +1,7 @@
 package com.example.wordquizgame;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -78,6 +79,28 @@ public class GameActivity extends AppCompatActivity {
     private void getImageFileNames() {
         String[] categories = {"animals", "body", "colors", "numbers", "objects"};
 
+        AssetManager assets = getAssets();
+
+        for (String category : categories) {
+            try {
+                String[] fileNames = assets.list(category);
+
+                for (String f : fileNames) {
+                    mFileNameList.add(f.replace(".png", ""));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "Error listing filename in " + category);
+            }
+        }
+
+        // log ชื่อไฟล์รูปภาพทั้ง 50 ไฟล์ออกมาดู
+        Log.i(TAG, "*******************************");
+        Log.i(TAG, "รายชื่อไฟล์ทั้งหมด");
+        for (String f : mFileNameList) {
+            Log.i(TAG, f);
+        }
+        Log.i(TAG, "*******************************");
     }
 
 /*

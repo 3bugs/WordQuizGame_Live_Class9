@@ -17,6 +17,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,8 +39,8 @@ public class GameActivity extends AppCompatActivity {
     private TableLayout mButtonTableLayout;
     private TextView mAnswerTextView;
 
-    private Random mRandom;
-    private Handler mHandler;
+    private Random mRandom = new Random();
+    private Handler mHandler = new Handler();
 
     private String mAnswerFileName;
     private int mTotalGuesses;
@@ -53,7 +55,24 @@ public class GameActivity extends AppCompatActivity {
         Intent i = getIntent();
         mDifficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
 
+        switch (mDifficulty) {
+            case 0:
+                mNumChoices = 2;
+                break;
+            case 1:
+                mNumChoices = 4;
+                break;
+            case 2:
+                mNumChoices = 6;
+                break;
+        }
 
+        mQuestionNumberTextView = (TextView) findViewById(R.id.questionNumberTextView);
+        mQuestionImageView = (ImageView) findViewById(R.id.questionImageView);
+        mButtonTableLayout = (TableLayout) findViewById(R.id.buttonTableLayout);
+        mAnswerTextView = (TextView) findViewById(R.id.answerTextView);
+
+        getImageFileNames();
 
     }
 

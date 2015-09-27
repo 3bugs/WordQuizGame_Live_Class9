@@ -17,11 +17,21 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     private Button playGameButton;
     private Button highScoreButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            int age = savedInstanceState.getInt("age");
+            Toast.makeText(this, "Age = " + age, Toast.LENGTH_LONG).show();
+        }
+
+        Log.i(TAG, "onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -83,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast t = Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_LONG);
+                Toast t = Toast.makeText(MainActivity.this, "Hello", Toast.LENGTH_LONG);
                 t.show();
 
                 Toast.makeText(
@@ -94,29 +104,56 @@ public class MainActivity extends AppCompatActivity {
 
                 ImageView image = (ImageView) findViewById(R.id.logo_image);
                 image.setImageResource(R.mipmap.ic_launcher);
+
+                Intent intent = new Intent(MainActivity.this, HighScoreActivity.class);
+                startActivity(intent);
             }
         });
     }
 
-
-/*
     @Override
-    public void onClick(View v) {
-        Toast t = Toast.makeText(this, "Hello", Toast.LENGTH_LONG);
-        t.show();
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
     }
-*/
 
-/*
-    private class MyListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
     }
-*/
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState");
+
+        outState.putInt("age", 40);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

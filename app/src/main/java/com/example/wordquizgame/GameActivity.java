@@ -1,12 +1,17 @@
 package com.example.wordquizgame;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +21,8 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.wordquizgame.db.DatabaseHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,10 +53,16 @@ public class GameActivity extends AppCompatActivity {
     private int mScore;
     private int mNumChoices;
 
+    private DatabaseHelper mHelper;
+    private SQLiteDatabase mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        mHelper = new DatabaseHelper(this);
+        mDatabase = mHelper.getWritableDatabase();
 
         Intent i = getIntent();
         mDifficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
@@ -171,7 +183,7 @@ public class GameActivity extends AppCompatActivity {
             String randomWord = getWord(mFileNameList.get(randomIndex));
 
             if (mChoiceWordList.contains(randomWord) == false &&
-                    randomWord.equals(getWord(mAnswerFileName)) == false ) {
+                    randomWord.equals(getWord(mAnswerFileName)) == false) {
                 mChoiceWordList.add(randomWord);
             }
         }
@@ -235,11 +247,73 @@ public class GameActivity extends AppCompatActivity {
             mAnswerTextView.setText(msg);
             mAnswerTextView.setTextColor(
                     getResources().getColor(android.R.color.holo_green_dark));
+
+            // ตอบถูก และเล่นครบทุกข้อแล้ว (จบเกม)
+            if (mScore == 3) {
+
+                saveScore();
+
+                String msgResult = String.format(
+                        "จำนวนครั้งที่ทาย: %d\nเปอร์เซ็นต์ความถูกต้อง: %.1f",
+                        mTotalGuesses,
+                        100 * 3 / (double) mTotalGuesses
+                );
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("สรุปผล");
+                dialog.setMessage(msgResult);
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("เริ่มเกมใหม่", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startQuiz();
+                    }
+                });
+                dialog.setNegativeButton("กลับหน้าหลัก", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                dialog.show();
+            }
+            // ตอบถูก แต่ยังไม่ครบทุกข้อ (ยังไม่จบเกม)
+            else {
+                mHandler.postDelayed(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                loadNextQuestion();
+                            }
+                        }
+                        , 2000
+                );
+            }
         }
         // ตอบผิด
         else {
+            guessButton.setEnabled(false);
 
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.fail3);
+            mp.start();
+
+            String msg = "ผิดครับ ลองใหม่นะครับ";
+            mAnswerTextView.setText(msg);
+            mAnswerTextView.setTextColor(
+                    getResources().getColor(android.R.color.holo_red_dark));
         }
+
+    }
+
+    private void saveScore() {
+
+        ContentValues cv = new ContentValues();
+        double percent = 100 * 3 / (double) mTotalGuesses;
+
+        cv.put(DatabaseHelper.COL_SCORE, percent);
+        cv.put(DatabaseHelper.COL_DIFFICULTY, mDifficulty);
+
+        mDatabase.insert(DatabaseHelper.TABLE_NAME, null, cv);
 
     }
 

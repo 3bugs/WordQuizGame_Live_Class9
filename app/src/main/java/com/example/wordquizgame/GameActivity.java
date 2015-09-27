@@ -101,6 +101,31 @@ public class GameActivity extends AppCompatActivity {
             Log.i(TAG, f);
         }
         Log.i(TAG, "*******************************");
+
+        startQuiz();
+    }
+
+    private void startQuiz() {
+        mTotalGuesses = 0;
+        mScore = 0;
+        mQuizWordList.clear();
+
+        while (mQuizWordList.size() < 3) {
+            int randomIndex = mRandom.nextInt(mFileNameList.size());
+            String fileName = mFileNameList.get(randomIndex);
+
+            if (mQuizWordList.contains(fileName) == false) {
+                mQuizWordList.add(fileName);
+            }
+        }
+
+        // log ชื่อไฟล์รูปภาพคำถาม
+        Log.i(TAG, "*******************************");
+        Log.i(TAG, "รายชื่อไฟล์คำถาม");
+        for (String f : mQuizWordList) {
+            Log.i(TAG, f);
+        }
+        Log.i(TAG, "*******************************");
     }
 
 /*

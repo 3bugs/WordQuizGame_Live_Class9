@@ -73,9 +73,14 @@ public class GameActivity extends AppCompatActivity {
         mAnswerTextView = (TextView) findViewById(R.id.answerTextView);
 
         getImageFileNames();
+    }
+
+    private void getImageFileNames() {
+        String[] categories = {"animals", "body", "colors", "numbers", "objects"};
 
     }
 
+/*
     private OkHttpClient client = new OkHttpClient();
 
     private void connectInternet(String url) {
@@ -98,4 +103,5 @@ public class GameActivity extends AppCompatActivity {
             }
         });
     }
+*/
 }

@@ -1,12 +1,25 @@
 package com.example.wordquizgame;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -18,7 +31,19 @@ public class GameActivity extends AppCompatActivity {
     private ArrayList<String> mFileNameList = new ArrayList<>();
     private ArrayList<String> mQuizWordList = new ArrayList<>();
     private ArrayList<String> mChoiceWordList = new ArrayList<>();
-    
+
+    private TextView mQuestionNumberTextView;
+    private ImageView mQuestionImageView;
+    private TableLayout mButtonTableLayout;
+    private TextView mAnswerTextView;
+
+    private Random mRandom;
+    private Handler mHandler;
+
+    private String mAnswerFileName;
+    private int mTotalGuesses;
+    private int mScore;
+    private int mNumChoices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,30 +53,30 @@ public class GameActivity extends AppCompatActivity {
         Intent i = getIntent();
         mDifficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
 
+
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_game, menu);
-        return true;
+    private OkHttpClient client = new OkHttpClient();
+
+    private void connectInternet(String url) {
+        final Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+
+
+                String result = response.body().string();
+                Log.i(TAG, result);
+            }
+        });
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
 }

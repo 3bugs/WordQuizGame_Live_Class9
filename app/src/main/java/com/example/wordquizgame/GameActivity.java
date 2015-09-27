@@ -5,13 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
 
+    private static final String TAG = "GameActivity";
     public static final String EXTRA_DIFFICULTY = "diff";
 
-    private int difficulty;
+    private int mDifficulty;
+
+    private ArrayList<String> mFileNameList = new ArrayList<>();
+    private ArrayList<String> mQuizWordList = new ArrayList<>();
+    private ArrayList<String> mChoiceWordList = new ArrayList<>();
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +26,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         Intent i = getIntent();
-        difficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
-
+        mDifficulty = i.getIntExtra(EXTRA_DIFFICULTY, 0);
 
     }
 
@@ -45,4 +51,7 @@ public class GameActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 }

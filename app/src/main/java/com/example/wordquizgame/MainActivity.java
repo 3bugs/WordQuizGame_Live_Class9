@@ -44,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
                                         MainActivity.this,
                                         GameActivity.class
                                 );
-
                                 i.putExtra(GameActivity.EXTRA_DIFFICULTY, which);
-                                i.putExtra("name", "Promlert");
-                                i.putExtra("age", 40);
-
                                 startActivity(i);
                             }
                         }
@@ -86,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
         highScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Toast t = Toast.makeText(MainActivity.this,"Hello",Toast.LENGTH_LONG);
+                t.show();
+
                 Toast.makeText(
                         MainActivity.this,
                         "Hello High Score",

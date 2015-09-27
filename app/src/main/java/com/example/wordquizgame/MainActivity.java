@@ -2,6 +2,8 @@ package com.example.wordquizgame;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +32,31 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Choose difficulty level");
-                dialog.setMessage("xxx");
+
+                dialog.setItems(
+                        new String[]{"Easy", "Medium", "Hard"},
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.i("MainActivity", "You clicked " + which);
+
+                                Intent i = new Intent(
+                                        MainActivity.this,
+                                        GameActivity.class
+                                );
+
+                                i.putExtra("diff", which);
+                                i.putExtra("name", "Promlert");
+                                i.putExtra("age", 40);
+
+                                startActivity(i);
+                            }
+                        }
+                );
+
+                dialog.show();
+
+/*
                 dialog.setPositiveButton("Easy", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -49,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("MainActivity", "You clicked Hard.");
                     }
                 });
+*/
 
-                dialog.show();
 
             }
         });

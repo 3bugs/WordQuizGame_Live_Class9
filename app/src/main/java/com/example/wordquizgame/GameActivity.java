@@ -2,6 +2,7 @@ package com.example.wordquizgame;
 
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.squareup.okhttp.Response;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -126,7 +128,49 @@ public class GameActivity extends AppCompatActivity {
             Log.i(TAG, f);
         }
         Log.i(TAG, "*******************************");
+
+        loadNextQuestion();
     }
+
+    private void loadNextQuestion() {
+        mAnswerTextView.setText(null);
+        mAnswerFileName = mQuizWordList.remove(0);
+
+        String msg = String.format("คำถาม %d จาก 3", mScore + 1);
+        mQuestionNumberTextView.setText(msg);
+
+        Log.i(TAG, "ไฟล์รูปภาพคำถามคือ " + mAnswerFileName);
+
+        loadQuestionImage();
+        prepareChoiceWords();
+    }
+
+    private void loadQuestionImage() {
+        String category = mAnswerFileName.substring(
+                0,
+                mAnswerFileName.indexOf('-')
+        );
+        String filePath = category + "/" + mAnswerFileName + ".png";
+
+        AssetManager assets = getAssets();
+
+        InputStream stream;
+        try {
+            stream = assets.open(filePath);
+            Drawable drawable = Drawable.createFromStream(stream, filePath);
+            mQuestionImageView.setImageDrawable(drawable);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error loading image file: " + filePath);
+        }
+    }
+
+    private void prepareChoiceWords() {
+
+    }
+
+
 
 /*
     private OkHttpClient client = new OkHttpClient();
